@@ -1,12 +1,26 @@
 import {useContext} from "react";
 import { Context} from "../App";
-import {handleClickNoteUpdate} from "../services/SharedServices";
 
 function NoteUpdateInterface() {
     const {value, setValue} = useContext(Context)
 
     function changeHandler(e) {
-        setValue({update: false, showUpdate: true, note: {...value.note, [e.target.name]: e.target.value}})
+        setValue({
+            update: false,
+            showUpdate: true,
+            note: {
+                ...value.note,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    async function handleClickNoteUpdate(note){
+        await fetch('http://localhost:8090/note/updatenote', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(note)
+        })
     }
 
     if(value.showUpdate === true){
@@ -30,12 +44,19 @@ function NoteUpdateInterface() {
                         <option value="Done">Done</option>
                     </select>
                     <br/>
-                    <button type="button" onClick={() => {
-                        handleClickNoteUpdate(value.note);
-                        setValue({update: true, showUpdate: false, note: null})
-                    }}
-                            className=" mt-4 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">Finish
-                        Update
+                    <button
+                        type="button"
+                        onClick={ async() => {
+                            await handleClickNoteUpdate(value.note);
+                            setValue({
+                                update: true,
+                                showUpdate: false,
+                                note: null
+                            })
+                        }}
+                        className=" mt-4 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4
+                        border-blue-700 hover:border-blue-500 rounded">
+                        Finish Update
                     </button>
                 </div>
             </form>

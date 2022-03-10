@@ -1,16 +1,15 @@
 import {useContext, useEffect, useState} from "react";
-import {handleClickNoteCreation, getAllNotes} from "../services/SharedServices";
 import {Context} from "../App";
 
 function NoteCreationInterface() {
     const [createClicked, setCreateClicked] = useState(false)
     const {setValue} = useContext(Context)
+    const [note, setNote] = useState(null)
     let newDateOptions = {
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
     }
-    const [note, setNote] = useState(null)
 
     useEffect(async () => {
         if (!createClicked) {
@@ -27,13 +26,37 @@ function NoteCreationInterface() {
                 title: "",
                 description: "",
                 dueDate: new Date().toLocaleString("en-US", newDateOptions),
-                status: "Idea"})
+                status: "Idea"
+            })
         }
     }, [createClicked])
 
     function changeHandler(e) {
-        setNote({...note, [e.target.name]: e.target.value})
+        setNote({
+            ...note,
+            [e.target.name]: e.target.value
+        })
     }
+
+    function getAllNotes(){
+        return fetch('http://localhost:8090/note/listnotes', {
+            method: 'GET',
+            headers: {Accept: 'application/json'}})
+            .then(response => response.json())
+    }
+
+    async function handleClickNoteCreation(note, e){
+        if(note.title !== "" && note.description !== "" && note.dueDate !== ""){
+            await fetch('http://localhost:8090/note/createnote', {
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(note)
+            })
+        }else{
+            alert("One or more inputs are missing")
+        }
+    }
+
     if(createClicked) {
         return (
             <form className="bg-blue-200 p-3 m-5 rounded-3xl">
@@ -57,12 +80,14 @@ function NoteCreationInterface() {
                     </select>
                     <button
                         type="button"
-                        className="mt-4 ml-5 bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
-                        onClick={() => {
-                            handleClickNoteCreation(note);
+                        className="mt-4 ml-5 bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4
+                        border-green-700 hover:border-green-500 rounded"
+                        onClick={ async() => {
+                            await handleClickNoteCreation(note);
                             setCreateClicked(false);
                             setValue({update: true, showUpdate: false, note: null})
-                        }}>Create
+                        }}>
+                        Create
                     </button>
                 </div>
             </form>
@@ -70,9 +95,12 @@ function NoteCreationInterface() {
     }else {
         return (
             <div>
-                <button type="button"
-                    className="mt-4 ml-5 bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
-                    onClick={() => setCreateClicked(true)}>Create Note
+                <button
+                    type="button"
+                    className="mt-4 ml-5 bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4
+                    border-green-700 hover:border-green-500 rounded"
+                    onClick={() => setCreateClicked(true)}>
+                    Create Note
                 </button>
             </div>
         )

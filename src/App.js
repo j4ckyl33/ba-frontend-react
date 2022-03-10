@@ -4,10 +4,20 @@ import NoteCreationInterface from "./components/NoteCreationInterface";
 import {createContext, useState} from "react";
 import NoteUpdateInterface from "./components/NoteUpdateInterface";
 
-export const Context = createContext({ value: {getNotes: true, showUpdate: false, note: null}, setValue: () => {} });
+export const Context = createContext({
+    value: {
+        getNotes: true,
+        showUpdate: false,
+        note: null
+    },
+    setValue: () => {} });
 
 function App() {
-    const [value, setValue] = useState({update: true, showUpdate: false, note: null})
+    const [value, setValue] = useState({
+        update: true,
+        showUpdate: false,
+        note: null
+    })
     return (
     <div className="App">
         <Context.Provider value={{value, setValue}}>
