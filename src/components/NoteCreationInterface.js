@@ -45,7 +45,7 @@ function NoteCreationInterface() {
             .then(response => response.json())
     }
 
-    async function handleClickNoteCreation(note, e){
+    async function handleClickNoteCreation(note){
         if(note.title !== "" && note.description !== "" && note.dueDate !== ""){
             await fetch('http://localhost:8090/note/createnote', {
                 method: 'POST',
