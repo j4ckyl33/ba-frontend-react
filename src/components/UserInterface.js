@@ -6,7 +6,6 @@ import {Context} from "../App";
 function UserInterface(){
     const [response, setResponse] = useState([])
     const {value, setValue} = useContext(Context)
-    const [counter, setCounter] = useState(0)
 
     useEffect(() => {
         if(value.update === true){
@@ -17,8 +16,6 @@ function UserInterface(){
                 note: null
             })
         }
-        console.log(counter)
-        setCounter(counter + 1)
     },[value]);
 
     function getAllNotes(){
@@ -75,7 +72,17 @@ function UserInterface(){
             <button
                 onClick={async () => {
                     await createMassNotes()
-                    setValue({update: true, showUpdate: false, note: null})
+                    setValue({
+                        update: true,
+                        showUpdate: false,
+                        note: {
+                            index: 0,
+                            title: "",
+                            description: "",
+                            dueDate: "01.03.2022",
+                            status: "Idea"
+                        }
+                    })
                 }}
                 className="mt-4 ml-5 bg-green-500 hover:bg-green-400 text-white font-bold mr-4 py-2
                 px-4 border-b-4 border-green-700 hover:border-green-500 rounded">
@@ -84,7 +91,17 @@ function UserInterface(){
             <button
                 onClick={async () => {
                     await updateMassNotes()
-                    setValue({update: true, showUpdate: false, note: null})
+                    setValue({
+                        update: true,
+                        showUpdate: false,
+                        note: {
+                            index: 1,
+                            title: "",
+                            description: "",
+                            dueDate: "01.03.2022",
+                            status: "Idea"
+                        }
+                    })
                 }}
                 className="bg-blue-500 hover:bg-blue-400 text-white mr-4 mt-4 py-2 px-4
                 border-b-4 border-blue-700 hover:border-blue-500 rounded">
@@ -93,7 +110,17 @@ function UserInterface(){
             <button
                 onClick={async () => {
                     await deleteMassNotes()
-                    setValue({update: true, showUpdate: false, note: null})
+                    setValue({
+                        update: true,
+                        showUpdate: false,
+                        note: {
+                            index: 2,
+                            title: "",
+                            description: "",
+                            dueDate: "01.03.2022",
+                            status: "Idea"
+                        }
+                    })
                 }}
                 className="bg-red-500 hover:bg-red-400 text-white py-2 px-4 border-b-4 border-red-700
                 hover:border-red-500 rounded">
